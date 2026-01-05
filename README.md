@@ -155,6 +155,9 @@ cd robotlearningblock
 # Run the ESP-IDF Docker container with a volume pointing to the current directory
 docker run -it --rm -v /dev:/dev -v $(pwd):/robotlearningblock --privileged espressif/idf:release-v5.3
 
+# Install dependencies inside the Docker container
+pip3 install catkin_pkg lark-parser colcon-common-extensions empy==3.3.4
+
 # Navigate to the taskboard directory inside the Docker container
 cd /robotlearningblock/idf/taskboard
 
