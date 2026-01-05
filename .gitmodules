@@ -1,0 +1,2 @@
+[submodule "idf/taskboard/components/micro_ros_espidf_component"]
+	branch = df752687ea877151359f29f7d5d941ec082e7569
