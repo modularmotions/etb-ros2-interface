@@ -69,9 +69,6 @@ git clone https://github.com/peterso/etb-ros2-interface
 cd etb-ros2-interface
 git submodule update --init --recursive
 
-# Change to the project directory
-cd /etb-ros2-interface/idf/taskboard
-
 # Configure the project
 idf.py menuconfig
 # M5STACK controller -> M5STACK hardware (Select the hardware of the M5 HW on your board)
@@ -103,7 +100,7 @@ In case that the ROS 2 messages are modified, they need to be built from a ROS 2
 This is only necessary when the compiler shows an error similar to this:
 
 ```bash
-/etb-ros2-interface/idf/taskboard/main/microros/MicroROSTypes.hpp:217:27: error: 'robothon_taskboard_msgs__msg__TaskStatus' {aka 'struct robothon_taskboard_msgs__msg__TaskStatus'} has no member named 'score'
+/etb-ros2-interface/main/microros/MicroROSTypes.hpp:217:27: error: 'robothon_taskboard_msgs__msg__TaskStatus' {aka 'struct robothon_taskboard_msgs__msg__TaskStatus'} has no member named 'score'
 ```
 
 To build the ROS 2 messages run `colcon build` in the `extra_ros_packages` directory.
@@ -123,13 +120,13 @@ If the above commands are not available in your current environment, it is possi
 
 ```bash
 # Go to the taskboard directory in your host filesystem
-cd etb-ros2-interface/idf/taskboard
+cd etb-ros2-interface
 
 # Run the Jazzy Docker container with a volume pointing to the current directory
-docker run -it --rm --privileged --net=host -v $(pwd):/etb-ros2-interface/idf/taskboard ros:jazzy
+docker run -it --rm --privileged --net=host -v $(pwd):/etb-ros2-interface ros:jazzy
 
 # Navigate to the messages directory
-cd /etb-ros2-interface/idf/taskboard/extra_ros_packages
+cd /etb-ros2-interface/extra_ros_packages
 
 # Build the messages
 colcon build
@@ -159,7 +156,7 @@ docker run -it --rm -v /dev:/dev -v $(pwd):/etb-ros2-interface --privileged espr
 pip3 install catkin_pkg lark-parser colcon-common-extensions empy==3.3.4
 
 # Navigate to the taskboard directory inside the Docker container
-cd /etb-ros2-interface/idf/taskboard
+cd /etb-ros2-interface
 
 # Clean and build the project
 idf.py clean
@@ -474,14 +471,14 @@ To record a ROS 2 session the usage of [Vulcanexus Recorder & Replay](https://do
 To use the recorder, the easiest way is using docker:
 
 ```bash
-cd etb-ros2-interface/idf/taskboard
+cd etb-ros2-interface
 docker run -it --rm --privileged --net host --ipc host  -v $(pwd)/extra_ros_packages/record_replay_session:/shared_folder eprosima/vulcanexus:jazzy-desktop ddsrecorder -c /shared_folder/config.yml
 ```
 
 To allow the DDS Recorder to append custom ROS 2 types into `.mcap` file (to use them in platforms such as Foxglove Studio), ensure that the following command is run at least once during the recording session:
 
 ```bash
-cd etb-ros2-interface/idf/taskboard
+cd etb-ros2-interface
 docker run -it --rm --privileged --net host --ipc host  -v $(pwd)/extra_ros_packages:/shared_folder eprosima/vulcanexus:jazzy-desktop bash /shared_folder/record_replay_session/match_topic_types.sh
 ```
 
