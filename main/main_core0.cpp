@@ -228,6 +228,7 @@ extern "C" void app_main(
         // Display appropriate connection instructions based on provisioning state
         if (wifi_manager.is_provisioned())
         {
+            screen_controller.print("-> MAC: " + task_board_driver.get_unique_id());
             screen_controller.print("-> Trying " + wifi_manager.get_ssid());
             screen_controller.print("-> Reset with red and blue buttons");
         }
