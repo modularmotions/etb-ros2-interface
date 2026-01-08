@@ -58,13 +58,23 @@ struct Actuator
      * 
      * @param status State to set the actuator to
      */
-    virtual void set_state(State status) const
+    virtual void set_state(State status)
     {
         set_function_(status);
+        state_ = status;
+    }
+
+    /**
+     * @brief Gets the current state of the actuator
+     */
+    const State& read() const
+    {
+        return state_;
     }
 
 protected:
 
     std::string name_;              ///< Sensor identifier
     SetFunction set_function_;      ///< Callback function to set actuator state
+    State state_;                   ///< Current actuator state
 };
