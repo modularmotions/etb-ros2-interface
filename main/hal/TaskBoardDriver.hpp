@@ -6,6 +6,7 @@
 
 #include <task/Task.hpp>
 #include <sensor/Sensor.hpp>
+#include <sensor/Actuator.hpp>
 
 #include <hal/HardwareLowLevelController.hpp>
 
@@ -63,6 +64,23 @@ struct TaskBoardDriver
      */
     virtual SensorReader* get_sensor_by_name(
             const std::string& sensor_name) const = 0;
+
+    /**
+     * @brief Gets the total number of actuators available on the board
+     *
+     * @return Number of actuators
+     */
+    virtual uint32_t get_actuator_count() const = 0;
+
+    /**
+     * @brief Gets a actuator by its index
+     *
+     * @param index Zero-based index of the actuator to retrieve
+     *
+     * @return Pointer to the actuator object, or nullptr if index is invalid
+     */
+    virtual Actuator* get_actuator(
+            const size_t& index) const = 0;
 
     /**
     * @brief Gets a unique SSID name based on WiFi interface MAC address
