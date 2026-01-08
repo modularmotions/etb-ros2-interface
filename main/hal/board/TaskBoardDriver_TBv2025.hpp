@@ -483,6 +483,25 @@ struct TaskBoardDriver_v1 :
         return sensor;
     }
 
+    // Actuator methods:
+    uint32_t get_actuator_count() const override
+    {
+        return actuators_.size();
+    }
+
+    Actuator* get_actuator(
+            const size_t& index) const override
+    {
+        Actuator* actuator = nullptr;
+
+        if (index < actuators_.size())
+        {
+            actuator = actuators_[index];
+        }
+
+        return actuator;
+    }
+
     /// Virtual method implementation
     const std::string& get_unique_ssid() const override
     {
