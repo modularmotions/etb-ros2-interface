@@ -6,6 +6,7 @@
 
 #include <sensor/Sensor.hpp>
 #include <sensor/SensorMeasurement.hpp>
+#include <sensor/Actuator.hpp>
 #include <microros/MicroROSController.hpp>
 #include <task/Task.hpp>
 
@@ -157,6 +158,36 @@ struct JSONHandler
                 cJSON_AddItemToArray(sensors_, sensor);
             }
         }
+
+        // Add actuators array
+        cJSON* actuators_ = cJSON_CreateArray();
+        cJSON_AddItemToObject(root_, "actuators", actuators_);
+
+        for (size_t i = 0; i < task_board_driver.get_actuator_count(); i++)
+        {
+            const Actuator* actuator_dev = task_board_driver.get_actuator(i);
+
+            if (actuator_dev != nullptr)
+            {
+                cJSON* actuator = cJSON_CreateObject();
+                cJSON_AddStringToObject(actuator, "id", actuator_dev->name().c_str());
+
+                const auto state = actuator_dev->read();
+
+                // Note: currently assuming only boolean values:
+                if ( state == Actuator::State::OFF )
+                    cJSON_AddBoolToObject(actuator, "value", false);
+                else if ( state == Actuator::State::ON || state == Actuator::State::LED_ON )
+                    cJSON_AddBoolToObject(actuator, "value", true);
+
+                cJSON_AddItemToArray(actuators_, actuator);
+            }
+        }
+
+        // DEBUG:
+        /* // convert the cJSON object to a JSON string and print: */
+        /* char *json_str = cJSON_Print(root_); */
+        /* printf("%s\n", json_str); */
     }
 
     /**
