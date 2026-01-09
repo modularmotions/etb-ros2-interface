@@ -76,5 +76,5 @@ protected:
 
     std::string name_;              ///< Sensor identifier
     SetFunction set_function_;      ///< Callback function to set actuator state
-    State state_;                   ///< Current actuator state
+    State state_ = State::OFF;                   ///< Current actuator state
 };
