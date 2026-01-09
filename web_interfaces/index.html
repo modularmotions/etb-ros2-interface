@@ -68,11 +68,12 @@
                 "sensors leaderboard"
                 "sensors microros"
                 "sensors resources"
-                "sensors tasks";
+                "actuators tasks";
             gap: 20px;
         }
         .top-card { grid-area: top; }
         .sensors-card { grid-area: sensors; }
+        .actuators-card { grid-area: actuators; }
         .tasks-card { grid-area: tasks; }
         .leaderboard-card { grid-area: leaderboard; }
         .micro-ros-card { grid-area: microros; }
@@ -128,6 +129,30 @@
             color: #2196f3;
         }
         .sensor-value {
+            font-family: monospace;
+            font-size: 1.1em;
+        }
+        .actuator-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 15px;
+        }
+        .actuator-item {
+            background: #f8f8f8;
+            padding: 15px;
+            border-radius: 6px;
+            transition: transform 0.2s;
+        }
+        .actuator-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .actuator-name {
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #2196f3;
+        }
+        .actuator-value {
             font-family: monospace;
             font-size: 1.1em;
         }
@@ -495,6 +520,11 @@
         <div class="card sensors-card">
             <h2>Sensors</h2>
             <div class="sensor-grid" id="sensors-grid"></div>
+        </div>
+
+        <div class="card actuators-card">
+            <h2>Actuators</h2>
+            <div class="actuator-grid" id="actuators-grid"></div>
         </div>
 
         <div class="card micro-ros-card">
@@ -1307,6 +1337,58 @@
             });
         }
 
+        function updateUIActuators(data) {
+            document.getElementById('device-id').textContent = data.device_id;
+            document.getElementById('last-update').textContent = "Last updated: " + formatTimestamp();
+
+            const actuatorsGrid = document.getElementById('actuators-grid');
+            const existingActuators = new Map();
+
+            // Store existing actuator elements in a Map for quick lookup
+            Array.from(actuatorsGrid.children).forEach(child => {
+                const actuatorId = child.querySelector('.actuator-name').textContent;
+                existingActuators.set(actuatorId, child);
+            });
+
+            data.actuators.forEach(actuator => {
+                let actuatorDiv = existingActuators.get(actuator.id);
+
+                if (!actuatorDiv) {
+                    // Create a new actuator element if it doesn't exist
+                    actuatorDiv = document.createElement('div');
+                    actuatorDiv.className = 'actuator-item';
+                    actuatorDiv.innerHTML = `
+                        <div class="actuator-name">${actuator.id}</div>
+                        <div class="actuator-value"></div>
+                    `;
+                    actuatorsGrid.appendChild(actuatorDiv);
+                }
+
+                // Update the actuator value
+                const valueDiv = actuatorDiv.querySelector('.actuator-value');
+                let valueHtml = '';
+
+                if (typeof actuator.value === 'boolean') {
+                    valueHtml = `<span class="boolean-value ${actuator.value}">${actuator.value}</span>`;
+                }
+                else if (typeof actuator.value === 'number') {
+                    const isInteger = actuator.is_integer;
+                    if (!isInteger) {
+                        valueHtml = actuator.value.toFixed(3);
+                    }
+                    else {
+                        valueHtml = `<span class="integer-value ${actuator.value}">${actuator.value}</span>`;
+                    }
+                }
+                else {
+                    valueHtml = actuator.value;
+                }
+
+                valueDiv.innerHTML = valueHtml;
+            });
+
+        }
+
         function updateTaskUI(data)
         {
             const dashboardDiv = document.querySelector('.dashboard');
@@ -1529,6 +1611,7 @@
                         // Check "ws_data_type" to determine which data is being sent
                         if (data.ws_data_type === "taskboard_status") {
                             updateUI(data);
+                            updateUIActuators(data);
                         } else if (data.ws_data_type === "system_status") {
                             updateSystemStatus(data);
                         } else if (data.ws_data_type === "task_status") {
