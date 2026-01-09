@@ -239,31 +239,31 @@ struct TaskBoardDriver_v1 :
         sensors_.push_back(touch_screen_position);
 
         // Initialize actuators
-        Actuator* goal_1_led = new Actuator("GOAL_1_LED", [&](Actuator::State state)
+        Actuator* goal_1_led = new Actuator("Goal 1 LED", [&](Actuator::State state)
                         {
                             hardware_low_level_controller_.pb_hub_controller_1.write_digital_IO1(PbHubController::Channel::CHANNEL_4, state == Actuator::State::LED_ON);
                         });
-        Actuator* goal_2_led = new Actuator("GOAL_2_LED", [&](Actuator::State state)
+        Actuator* goal_2_led = new Actuator("Goal 2 LED", [&](Actuator::State state)
                         {
                             hardware_low_level_controller_.pb_hub_controller_1.write_digital_IO0(PbHubController::Channel::CHANNEL_5, state == Actuator::State::LED_ON);
                         });
-        Actuator* goal_3_led = new Actuator("GOAL_3_LED", [&](Actuator::State state)
+        Actuator* goal_3_led = new Actuator("Goal 3 LED", [&](Actuator::State state)
                         {
                             hardware_low_level_controller_.pb_hub_controller_1.write_digital_IO0(PbHubController::Channel::CHANNEL_4, state == Actuator::State::LED_ON);
                         });
-        Actuator* goal_4_led = new Actuator("GOAL_4_LED", [&](Actuator::State state)
+        Actuator* goal_4_led = new Actuator("Goal 4 LED", [&](Actuator::State state)
                         {
                             hardware_low_level_controller_.pb_hub_controller_1.write_digital_IO1(PbHubController::Channel::CHANNEL_5, state == Actuator::State::LED_ON);
                         });
-        Actuator* blue_button_led = new Actuator("BLUE_BUTTON_LED", [&](Actuator::State state)
+        Actuator* blue_button_led = new Actuator("Blue Button LED", [&](Actuator::State state)
                         {
                             hardware_low_level_controller_.pb_hub_controller_2.write_digital_IO0(PbHubController::Channel::CHANNEL_0, state == Actuator::State::LED_ON);
                         });
-        Actuator* red_button_led = new Actuator("RED_BUTTON_LED", [&](Actuator::State state)
+        Actuator* red_button_led = new Actuator("Red Button LED", [&](Actuator::State state)
                         {
                             hardware_low_level_controller_.pb_hub_controller_2.write_digital_IO0(PbHubController::Channel::CHANNEL_1, state == Actuator::State::LED_ON);
                         });
-        Actuator* ball_drop_solenoid = new Actuator("BALL_DROP_SOLENOID", [&](Actuator::State state)
+        Actuator* ball_drop_solenoid = new Actuator("Ball Drop Solenoid", [&](Actuator::State state)
                         {
                             if (state == Actuator::State::ON)
                             {
@@ -274,7 +274,7 @@ struct TaskBoardDriver_v1 :
                                 deactivate_solenoid();
                             }
                         });
-        Actuator* all_goal_leds = new Actuator("ALL_GOAL_LEDS", [&](Actuator::State state)
+        Actuator* all_goal_leds = new Actuator("All Goal LEDs", [&](Actuator::State state)
                         {
                             ESP_LOGI("app_main", "setting values to all goal_leds"); 
                             hardware_low_level_controller_.pb_hub_controller_1.write_digital_IO0(PbHubController::Channel::CHANNEL_4, state == Actuator::State::LED_ON);
