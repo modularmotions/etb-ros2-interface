@@ -183,11 +183,6 @@ struct JSONHandler
                 cJSON_AddItemToArray(actuators_, actuator);
             }
         }
-
-        // DEBUG:
-        /* // convert the cJSON object to a JSON string and print: */
-        /* char *json_str = cJSON_Print(root_); */
-        /* printf("%s\n", json_str); */
     }
 
     /**
