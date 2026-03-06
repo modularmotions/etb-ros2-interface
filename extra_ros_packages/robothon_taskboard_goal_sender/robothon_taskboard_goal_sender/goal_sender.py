@@ -34,6 +34,7 @@ class RobothonTaskBoardGoalSender(Node):
     def feedback_callback(self, feedback):
         message = 'Feedback: {0}: '.format(feedback.feedback.elapsed_time)
         self.get_logger().info('Received feedback: {0}'.format(message))
+        # self.get_logger().info(f'[DEBUG] Test')
 
     def get_result_callback(self, future):
         result = future.result().result
@@ -54,35 +55,52 @@ class RobothonTaskBoardGoalSender(Node):
         goal_msg.human_task = False
 
         task = Task()
-        task.name = "Test task"
+        # task.name = "Test task"
+        task.name = "Speed test"
 
         # Define task steps
         steps = []
 
         # Press Blue Button
         task_step = TaskStep()
-        task_step.sensor_name = "BLUE_BUTTON"
+        task_step.sensor_name = "BLUE_BUTTON_LEFT"
         task_step.type = TaskStep.TASK_STEP_TYPE_EQUAL
         task_step.target.type = SensorMeasurement.SENSOR_MEASUREMENT_TYPE_BOOL
         task_step.target.bool_value.append(True)
         steps.append(task_step)
 
-        # Move fader to 0.5
+        # # Move fader to 0.5
+        # task_step = TaskStep()
+        # task_step.sensor_name = "FADER"
+        # task_step.type = TaskStep.TASK_STEP_TYPE_EQUAL
+        # task_step.target.type = SensorMeasurement.SENSOR_MEASUREMENT_TYPE_ANALOG
+        # task_step.target.analog_value.append(0.5)
+        # task_step.tolerance = 0.1
+        # steps.append(task_step)
+
+        # Press Red Button
         task_step = TaskStep()
-        task_step.sensor_name = "FADER"
+        task_step.sensor_name = "RED_BUTTON_RIGHT"
         task_step.type = TaskStep.TASK_STEP_TYPE_EQUAL
-        task_step.target.type = SensorMeasurement.SENSOR_MEASUREMENT_TYPE_ANALOG
-        task_step.target.analog_value.append(0.5)
-        task_step.tolerance = 0.1
+        task_step.target.type = SensorMeasurement.SENSOR_MEASUREMENT_TYPE_BOOL
+        task_step.target.bool_value.append(True)
         steps.append(task_step)
 
         # Press Red Button
         task_step = TaskStep()
-        task_step.sensor_name = "RED_BUTTON"
+        task_step.sensor_name = "BLUE_BUTTON_LEFT"
         task_step.type = TaskStep.TASK_STEP_TYPE_EQUAL
         task_step.target.type = SensorMeasurement.SENSOR_MEASUREMENT_TYPE_BOOL
         task_step.target.bool_value.append(True)
         steps.append(task_step)
+
+        # # Press Red Button
+        # task_step = TaskStep()
+        # task_step.sensor_name = "RED_BUTTON_RIGHT"
+        # task_step.type = TaskStep.TASK_STEP_TYPE_WAIT_RANDOM
+        # # task_step.target.type = SensorMeasurement.SENSOR_MEASUREMENT_TYPE_BOOL
+        # # task_step.target.bool_value.append(True)
+        # steps.append(task_step)
 
         # Shuffle steps if random_order is True
         if self.random_order:
@@ -114,6 +132,7 @@ def main(args=None):
         rclpy.init(args=args)
 
         goal_sender = RobothonTaskBoardGoalSender(random_order=cli_args.random_order)
+        goal_sender.get_logger().info(f'[DEBUG] cli_args.random_order: {cli_args.random_order}')
 
         goal_sender.send_goal()
 

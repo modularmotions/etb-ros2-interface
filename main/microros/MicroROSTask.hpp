@@ -9,6 +9,7 @@
 #include <task/TaskStepEqual.hpp>
 #include <task/TaskStepEqualToRandom.hpp>
 #include <task/TaskStepGreaterEqualThan.hpp>
+#include <task/TaskStepWaitRandom.hpp>
 #include <util/Timing.hpp>
 #include <hal/TaskBoardDriver.hpp>
 
@@ -78,6 +79,10 @@ struct MicroROSTask :
                 case robothon_taskboard_msgs__msg__TaskStep__TASK_STEP_TYPE_GREATER_EQUAL:
                     step = new TaskStepGreaterEqualThan(*sensor, target);
                     break;
+                /* case robothon_taskboard_msgs__msg__TaskStep__TASK_STEP_TYPE_WAIT_RANDOM: */
+                /*     /1* step = new TaskStepWaitRandom(*sensor->name, target); *1/ */
+                /*     step = new TaskStepWaitRandom(); */
+                /*     break; */
                 default:
                     break;
             }

@@ -55,6 +55,9 @@ struct MicroROSTypes
                 case ::TaskStep::Type::TRACE_SHAPE:
                     ret = robothon_taskboard_msgs__msg__TaskStep__TASK_STEP_TYPE_TRACE_SHAPE;
                     break;
+                /* case ::TaskStep::Type::WAIT_RANDOM: */
+                /*     ret = robothon_taskboard_msgs__msg__TaskStep__TASK_STEP_TYPE_WAIT_RANDOM; */
+                /*     break; */
                 default:
                     ret = robothon_taskboard_msgs__msg__TaskStep__TASK_STEP_TYPE_UNKNOWN;
                     break;

@@ -546,6 +546,7 @@
 
         <div class="card leaderboard-card">
             <h2>Leaderboard
+                <button onclick="downloadLeaderboardFile()" class="save-button">Save Data</button>
                 <button onclick="clearLeaderboard()" class="clear-button">Clear</button>
             </h2>
             <div class="leaderboard-body">
@@ -601,6 +602,15 @@
     </div>
 
     <script>
+
+    function downloadLeaderboardFile(csv_text) {
+        // var text = document.getElementById("textData").value;
+        var blob = new Blob([csv_text], { type: 'text/plain' });
+        var link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = 'myTextFile.txt';
+        link.click();
+    }
 
     class AnalogGraph {
         constructor(container) {
@@ -1470,6 +1480,7 @@
                     return;
                 }
                 const csvText = await response.text();
+                downloadLeaderboardFile(csvText);
 
                 // Parse CSV (skip first line with device ID and second line with headers)
                 const lines = csvText.split('\n').slice(2);
