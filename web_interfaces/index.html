@@ -546,8 +546,8 @@
 
         <div class="card leaderboard-card">
             <h2>Leaderboard
-                <button onclick="downloadLeaderboardFile()" class="save-button">Save Data</button>
-                <button onclick="clearLeaderboard()" class="clear-button">Clear</button>
+                <button class="download-button" onclick="downloadLeaderboardFile()">Download Data</button>
+                <button class="clear-button" onclick="clearLeaderboard()">Clear</button>
             </h2>
             <div class="leaderboard-body">
                 <table class="tasks-table">
@@ -602,15 +602,6 @@
     </div>
 
     <script>
-
-    function downloadLeaderboardFile(csv_text) {
-        // var text = document.getElementById("textData").value;
-        var blob = new Blob([csv_text], { type: 'text/plain' });
-        var link = document.createElement('a');
-        link.href = URL.createObjectURL(blob);
-        link.download = 'myTextFile.txt';
-        link.click();
-    }
 
     class AnalogGraph {
         constructor(container) {
@@ -1083,6 +1074,11 @@
             return now.toLocaleTimeString();
         }
 
+        function formatDatestamp() {
+            const now = new Date();
+            return now.toLocaleDateString();
+        }
+
         function showError(message) {
             const errorDiv = document.getElementById('error-message');
             errorDiv.innerHTML = '<div class="error"' + message + "</div>";
@@ -1470,6 +1466,26 @@
             }
         }
 
+
+        async function downloadLeaderboardFile() {
+
+            const url = deviceIP ? "http://" + deviceIP + "/leaderboard" : '/leaderboard';
+            const response = await fetchWithTimeout(url);
+
+            if (!response.ok) {
+                console.log("HTTP error! status: " + response.status);
+                return;
+            }
+            const csvText = await response.text();
+            var blob = new Blob([csvText], { type: 'text/plain' });
+            var link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            const filename = formatDatestamp() + "_etb_leaderboard_data.txt" 
+            link.download = filename;
+            // link.download = 'etb_leaderboard_data.txt';
+            link.click();
+        }
+
         async function fetchLeaderboard() {
             try {
                 const url = deviceIP ? "http://" + deviceIP + "/leaderboard" : '/leaderboard';
@@ -1480,7 +1496,6 @@
                     return;
                 }
                 const csvText = await response.text();
-                downloadLeaderboardFile(csvText);
 
                 // Parse CSV (skip first line with device ID and second line with headers)
                 const lines = csvText.split('\n').slice(2);
@@ -1583,6 +1598,7 @@
                 showError("Failed to clear leaderboard: " + error.message);
             }
         }
+
         function download(filename, text) {
             let dle = document.createElement('a');
             dle.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
@@ -1593,6 +1609,7 @@
             dle.click();
             document.body.removeChild(dle);
         }
+
         async function getURDFfile() {
             try {
                 const urdfUrl = deviceIP ? "http://" + deviceIP + "/urdf" : '/urdf';
