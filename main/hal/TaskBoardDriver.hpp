@@ -109,4 +109,32 @@ struct TaskBoardDriver
      * @return Reference to the precondition task
      */
     virtual Task& get_default_task_precondition() = 0;
+
+    /**
+     * @brief Gets the default task configured for this board
+     *
+     * @return Reference to the default task
+     */
+    virtual Task& get_task_2() = 0;
+
+    /**
+     * @brief Gets the precondition task that must be satisfied before the default task
+     *
+     * @return Reference to the precondition task
+     */
+    virtual Task& get_default_task_precondition_2() = 0;
+
+    /**
+     * @brief Gets the default task configured for this board
+     *
+     * @return Reference to the default task
+     */
+    virtual Task& get_task_3() = 0;
+
+    /**
+     * @brief Gets the precondition task that must be satisfied before the default task
+     *
+     * @return Reference to the precondition task
+     */
+    virtual Task& get_default_task_precondition_3() = 0;
 };

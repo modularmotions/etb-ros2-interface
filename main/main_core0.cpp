@@ -444,16 +444,59 @@ extern "C" void app_main(
             }
         }
         // Handle Button C press - Toggle solenoid
-        else if (BUTTON_C.read() == true)
+        else if (RED_BUTTON.read() == false && BUTTON_C.read() == true)
         {
-            ESP_LOGI("app_main", "Button C pressed, toggle solenoid");
-            // briefly turn on then off the solenoid
-            gpio_set_level(GPIO_NUM_19, 1);
-            vTaskDelay(pdMS_TO_TICKS(500));
-            gpio_set_level(GPIO_NUM_19, 0);
+            /* ESP_LOGI("app_main", "Button C pressed, toggle solenoid"); */
+            /* // briefly turn on then off the solenoid */
+            /* gpio_set_level(GPIO_NUM_19, 1); */
+            /* vTaskDelay(pdMS_TO_TICKS(500)); */
+            /* gpio_set_level(GPIO_NUM_19, 0); */
             
+            /* // Button debounce delay */
+            /* while (BUTTON_C.read() == true) */
+            /* { */
+            /*     vTaskDelay(pdMS_TO_TICKS(10)); */
+            /*     task_board_driver.update(); */
+            /* } */
+
+            ESP_LOGI("app_main", "Button B pressed, launching task 2");
+            task_executor.cancel_task();
+
+            // Get and configure default task
+            Task& main_task = task_board_driver.get_task_2();
+            Task& precondition_main_task = task_board_driver.get_default_task_precondition_2();
+
+            // Set this task as a human task if the power button is pressed
+            main_task.set_human_task(BUTTON_PWR.read() == true);
+
+            // Start task execution
+            task_executor.run_task(main_task, precondition_main_task);
+
             // Button debounce delay
-            while (BUTTON_C.read() == true)
+            while (RED_BUTTON.read() == false && BUTTON_C.read() == true)
+            {
+                vTaskDelay(pdMS_TO_TICKS(10));
+                task_board_driver.update();
+            }
+        }
+        // Handle Button C press - Toggle solenoid
+        else if (RED_BUTTON.read() == true && BUTTON_C.read() == true)
+        {
+            ESP_LOGI("app_main", "Blue Button pressed, launching task 3");
+            task_executor.cancel_task();
+
+            // Get and configure default task
+            Task& main_task = task_board_driver.get_task_3();
+            Task& precondition_main_task = task_board_driver.get_default_task_precondition_3();
+
+            // Set this task as a human task if the power button is pressed
+            main_task.set_human_task(BUTTON_PWR.read() == true);
+
+            // Start task execution
+            task_executor.run_task(main_task, precondition_main_task);
+
+            // Button debounce delay
+            while (RED_BUTTON.read() == true && BUTTON_C.read() == true)
             {
                 vTaskDelay(pdMS_TO_TICKS(10));
                 task_board_driver.update();

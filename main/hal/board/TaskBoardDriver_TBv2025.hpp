@@ -405,6 +405,52 @@ struct TaskBoardDriver_v1 :
         };
 
         default_task_ = new SequentialTask(*main_steps, "Default Task");
+
+        // Task 2
+        std::vector<const TaskStepBase*>* precondition_steps_2 = new std::vector<const TaskStepBase*>
+        {
+            new TaskStepActuator(*all_goal_leds, Actuator::State::OFF),
+            new TaskStepEqual(*get_sensor_by_name("RED_BUTTON_RIGHT"), SensorMeasurement(true)),
+        };
+
+        default_precondition_task_2_ = new SimultaneousConditionTask(*precondition_steps_2, "Precondition Task");
+
+        std::vector<const TaskStepBase*>* main_steps_2 = new std::vector<const TaskStepBase*>
+        {
+            new TaskStepWaitRandom("LIGHT_TEST_RAND_WAIT", 2000L, 2001L),
+            new TaskStepActuator(*red_button_led, Actuator::State::LED_ON),
+            new TaskStepEqual(*get_sensor_by_name("RED_BUTTON_RIGHT"), SensorMeasurement(true)),
+            new TaskStepActuator(*red_button_led, Actuator::State::OFF),
+        };
+
+        default_task_2_ = new SequentialTask(*main_steps_2, "Light Test");
+
+        // Task 3
+        std::vector<const TaskStepBase*>* precondition_steps_3 = new std::vector<const TaskStepBase*>
+        {
+            new TaskStepActuator(*all_goal_leds, Actuator::State::OFF),
+            /* new TaskStepEqual(*get_sensor_by_name("RED_BUTTON_RIGHT"), SensorMeasurement(true)), */
+            /* new TaskStepEqual(*get_sensor_by_name("BLUE_BUTTON_LEFT"), SensorMeasurement(true)), */
+            /* new TaskStepEqual(*get_sensor_by_name("ON_BOARD_BUTTON_B"), SensorMeasurement(true)), */
+        };
+
+        default_precondition_task_3_ = new SimultaneousConditionTask(*precondition_steps_3, "Precondition Task");
+
+        std::vector<const TaskStepBase*>* main_steps_3 = new std::vector<const TaskStepBase*>
+        {
+            // TASK 1 Find Task Board
+            new TaskStepActuator(*blue_button_led, Actuator::State::LED_ON),
+            new TaskStepActuator(*blue_button_led, Actuator::State::LED_ON),
+            new TaskStepEqual(*get_sensor_by_name("BLUE_BUTTON_LEFT"), SensorMeasurement(true)),
+            // TASK 2 Speed Test
+            new TaskStepActuator(*blue_button_led, Actuator::State::OFF),
+            new TaskStepEqual(*get_sensor_by_name("BLUE_BUTTON_LEFT"), SensorMeasurement(false)),
+            new TaskStepActuator(*red_button_led, Actuator::State::LED_ON),
+            new TaskStepEqual(*get_sensor_by_name("RED_BUTTON_RIGHT"), SensorMeasurement(true)),
+            new TaskStepActuator(*red_button_led, Actuator::State::OFF),
+        };
+
+        default_task_3_ = new SequentialTask(*main_steps_3, "Speed Test");
     }
 
     /**
@@ -421,10 +467,30 @@ struct TaskBoardDriver_v1 :
         return *default_task_;
     }
 
+    Task& get_task_2() override
+    {
+        return *default_task_2_;
+    }
+
+    Task& get_task_3() override
+    {
+        return *default_task_3_;
+    }
+
     /// Virtual method implementation
     Task& get_default_task_precondition() override
     {
         return *default_precondition_task_;
+    }
+
+    Task& get_default_task_precondition_2() override
+    {
+        return *default_precondition_task_2_;
+    }
+
+    Task& get_default_task_precondition_3() override
+    {
+        return *default_precondition_task_3_;
     }
 
     /// Virtual method implementation
@@ -527,5 +593,9 @@ private:
 
     Task* default_task_;                    ///< Default main task sequence
     Task* default_precondition_task_;       ///< Default precondition task sequence
+    Task* default_task_2_;                    ///< Default main task sequence
+    Task* default_precondition_task_2_;       ///< Default precondition task sequence
+    Task* default_task_3_;                    ///< Default main task sequence
+    Task* default_precondition_task_3_;       ///< Default precondition task sequence
 
 };
