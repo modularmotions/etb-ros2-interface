@@ -467,6 +467,22 @@
             background: #d32f2f;
         }
 
+        .save-button {
+            background: #4DC92E;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            font-size: 60%;
+            font-weight: bold;
+        }
+
+        .save-button:hover {
+            background: #40A626;
+        }
+
         .top-card h2
         {
             display: flex;
@@ -546,6 +562,7 @@
 
         <div class="card leaderboard-card">
             <h2>Leaderboard
+                <button onclick="getLeaderBoardfile()" class="save-button">Save Data</button>
                 <button onclick="clearLeaderboard()" class="clear-button">Clear</button>
             </h2>
             <div class="leaderboard-body">
@@ -601,6 +618,38 @@
     </div>
 
     <script>
+
+    async function getLeaderBoardfile() {
+        try {
+            const url = deviceIP ? "http://" + deviceIP + "/leaderboard" : '/leaderboard';
+            const response = await fetchWithTimeout(url);
+
+            if (!response.ok) {
+                console.log("HTTP error! status: " + response.status);
+                return;
+            } else {
+                /* Save raw leaderboard data: */
+                // response.text().then((text) => download("tb_leaderboard.csv", text));
+
+                /* Save filtered leaderboard data: */
+                const leaderboardBody = document.getElementById('leaderboard-body');
+                const csvData = [];
+
+                for (const row of leaderboardBody.rows) {
+                    const rowValues = [];
+                    for (const cell of row.cells) {
+                        rowValues.push(cell.innerText.trim());
+                    }
+                    csvData.push(rowValues.join(','));
+                }
+
+                const csvContent = csvData.join('\n');
+                download("tb_leaderboard.csv", csvContent);
+            }
+        } catch (error) {
+            showError("Failed to download Leaderboard file: " + error.message);
+        }
+    }
 
     class AnalogGraph {
         constructor(container) {
