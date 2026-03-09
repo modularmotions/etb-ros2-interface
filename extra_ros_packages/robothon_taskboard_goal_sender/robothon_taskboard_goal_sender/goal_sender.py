@@ -6,6 +6,7 @@ from robothon_taskboard_msgs.action import ExecuteTask
 from robothon_taskboard_msgs.msg import Task
 from robothon_taskboard_msgs.msg import TaskStep
 from robothon_taskboard_msgs.msg import SensorMeasurement
+from robothon_taskboard_msgs.msg import ActuatorStep
 
 import rclpy
 from rclpy.action import ActionClient
@@ -67,6 +68,19 @@ class RobothonTaskBoardGoalSender(Node):
         task_step.type = TaskStep.TASK_STEP_TYPE_EQUAL
         task_step.target.type = SensorMeasurement.SENSOR_MEASUREMENT_TYPE_BOOL
         task_step.target.bool_value.append(True)
+        print("DEBUG: task step: %s", task_step)
+        steps.append(task_step)
+
+        # Turn on Blue Button LED
+        task_step = TaskStep()
+        task_step.type = TaskStep.TASK_STEP_TYPE_ACTUATOR
+        task_step.actuator_name = "blue button led"
+        task_step.sensor_name = "Blue Button LED"
+
+        task_step.target.type = ActuatorStep.ACTUATOR_VALUE_TYPE_BOOL
+        task_step.state = True
+        task_step.target.bool_value.append(True)
+        print("DEBUG: task step: %s", task_step)
         steps.append(task_step)
 
         # # Move fader to 0.5

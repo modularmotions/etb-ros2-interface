@@ -17,6 +17,7 @@ rosidl_generate_interfaces(${PROJECT_NAME}
     "msg/Task.msg"
     "msg/TaskStep.msg"
     "msg/TaskStatus.msg"
+    "msg/ActuatorStep.msg"
     "action/ExecuteTask.action"
 
   DEPENDENCIES geometry_msgs std_msgs

@@ -10,6 +10,7 @@
 #include <task/TaskStepEqualToRandom.hpp>
 #include <task/TaskStepGreaterEqualThan.hpp>
 #include <task/TaskStepWaitRandom.hpp>
+#include <task/TaskStepActuator.hpp>
 #include <util/Timing.hpp>
 #include <hal/TaskBoardDriver.hpp>
 
@@ -65,6 +66,7 @@ struct MicroROSTask :
             }
 
             SensorMeasurement target = MicroROSTypes::SensorMeasurement::from_microros(msg_step.target);
+            TaskStepActuator state = Actuator::State::from_microros(msg_step.state);
 
             TaskStep* step = nullptr;
 
@@ -78,6 +80,10 @@ struct MicroROSTask :
                     break;
                 case robothon_taskboard_msgs__msg__TaskStep__TASK_STEP_TYPE_GREATER_EQUAL:
                     step = new TaskStepGreaterEqualThan(*sensor, target);
+                    break;
+                case robothon_taskboard_msgs__msg__TaskStep__TASK_STEP_TYPE_ACTUATOR:
+                    step = new TaskStepActuator(*actuator, state);
+                    // step = new TaskStepActuator(*blue_button_led, Actuator::State::LED_ON);
                     break;
                 /* case robothon_taskboard_msgs__msg__TaskStep__TASK_STEP_TYPE_WAIT_RANDOM: */
                 /*     /1* step = new TaskStepWaitRandom(*sensor->name, target); *1/ */
